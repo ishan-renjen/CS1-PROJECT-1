@@ -261,30 +261,29 @@ def annualize(data):
 
 
 def main_index():
-    # filename = input("enter house price index file: ")
-    region = "OH"
-    """input("enter state abbreviation or zip code: ")"""
+    filename = input("enter house price index file: ")
+    region = input("enter state abbreviation or zip code: ")
 
     if len(region) == 2:
-        unsorted = read_state_house_price_data("data/HPI_PO_state.txt")
+        unsorted = read_state_house_price_data(filename)
     else:
-        unsorted = read_zip_house_price_data("data/HPI_EXP_state.txt")
+        unsorted = read_zip_house_price_data(filename)
 
     print(unsorted)
 
-    # print("==================================================\n")
+    print("==================================================\n")
 
-    # data = index_range(unsorted, region)
-    # print_range(data, region)
+    data = index_range(unsorted, region)
+    print_range(data, region)
 
-    # annualized_data = annualize(unsorted)
-    # data = index_range(annualized_data, region)
-    # print_range(data, region)
+    annualized_data = annualize(unsorted)
+    data = index_range(annualized_data, region)
+    print_range(data, region)
 
-    # print("annualized index values for " + str(region)+"\n")
-    # region_data = annualized_data.get(region)
-    # for item in region_data:
-    #     print(item)
+    print("annualized index values for " + str(region)+"\n")
+    region_data = annualized_data.get(region)
+    for item in region_data:
+        print(item)
 
 
 
