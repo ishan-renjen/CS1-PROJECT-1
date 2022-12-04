@@ -30,7 +30,6 @@ def calculate_trends(data, year0, year1):
                     post = idx
 
             data_list = data_list[pre:post+1]
-            # print(data_list)
             templist_years.clear()
 
             if key in period_dict:
@@ -46,7 +45,6 @@ def calculate_trends(data, year0, year1):
         idxlist = [float(unsorted_list[0].idx), float(unsorted_list[-1].idx)]
         rate = cagr(idxlist, year1-year0)
         tuple_list.append(tuple((key, rate)))
-    # print(tuple_list)
 
     for mark in range(1, len(tuple_list)):
         j=mark
@@ -62,9 +60,9 @@ def calculate_trends(data, year0, year1):
 def main():
     filename = "data/HPI_PO_state.txt"
     #input("enter filename: ")
-    start_year = 2001
+    start_year = 2003
     #input("enter starting year: ")
-    end_year = 2009
+    end_year = 2016
     #input("enter end year: ")
     data = i.read_zip_house_price_data(filename)
     annualized = i.annualize(data)
