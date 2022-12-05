@@ -36,8 +36,8 @@ def build_plottable_array(xyears, regiondata):
             array = ma.append(array, float(years[year]))
         if year not in years:
             array = ma.append(array, None)
-
-    return array
+    final_array = ma.masked_equal(array, None)
+    return final_array
 
 
 def filter_years(data, year0, year1):
@@ -77,7 +77,10 @@ def filter_years(data, year0, year1):
 
 
 def plotHPI(data, regionList):
-    pass
+    plt.plot([1, 2, 3, 4])
+    plt.title('Using masked arrays')
+    plt.ylabel('some numbers')
+    plt.show()
 
 
 def plot_whiskers(data, regionList):
