@@ -136,11 +136,11 @@ def index_range(data, region):
     """
     high = data[region][0]
     low = data[region][0]
-    for hpi in data[region]:
-        if float(hpi.idx) < float(low.idx):
-            low = hpi
-        elif float(hpi.idx) > float(high.idx):
-            high = hpi
+    for x in data[region]:
+        if float(x.idx) < float(low.idx):
+            low = x
+        elif float(x.idx) > float(high.idx):
+            high = x
     
     return low, high
 
