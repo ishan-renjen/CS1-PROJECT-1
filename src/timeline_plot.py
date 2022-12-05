@@ -27,101 +27,96 @@ def build_plottable_array(xyears, regiondata):
             value_list.append(float(years[year]))
             mask_list.append(False)
         if year not in years:
-            value_list.append(None)
+            value_list.append(0)
             mask_list.append(True)
     final_array = ma.masked_array(value_list, mask_list)
     return final_array
 
 
 def filter_years(data, year0, year1):
-    period_dict = dict()
-    templist_years = list()
+    year0 = int(year0)
+    year1 = int(year1)
+    filtered_dict = dict()
+
     for key in data:
-        data_list = data.get(key)
+        data_list = data[key]
+        templist = []
         for item in data_list:
-            templist_years.append(int(item.year))
-
-        if year0 in templist_years and year1 in templist_years:
-            for idx in range(len(templist_years)):
-                if templist_years[idx] == year0:
-                    pre = idx
-                elif templist_years[idx] == year1:
-                    post = idx
-
-            data_list = data_list[pre:post+1]
-            templist_years.clear()
-
-            if key in period_dict:
-                period_dict[key] += data_list
-            else:
-                period_dict[key] = data_list
-        else:
-            templist_years.clear()
-
-    for key_lst in period_dict:
-        lst_values = period_dict.get(key_lst)
-        for mark in range(1, len(lst_values)):
-            j=mark
-            while j>0 and lst_values[j-1].year > lst_values[j].year:
-                lst_values[j], lst_values[j-1] = lst_values[j-1], lst_values[j]
-                j-=1
-
-    return period_dict
+            if int(item.year) >= int(year0) and int(item.year) <= int(year1):
+                templist.append(item)
+        filtered_dict[key] = templist
+    # print(filtered_dict)
+    return filtered_dict
 
 
 def plotHPI(data, regionList):
-    plt.title('Using masked arrays')
-    plt.ylabel('Indices')
-    plt.xlabel("Years")
-
-    year_list = list()
-    for obj in data[regionList[0]]:
-        year_list.append(int(obj.year))
-
-    for key in regionList:
+    year_set = set()
+    for key in data:
         data_list = data.get(key)
+        for item in data_list:
+            year_set.add(int(item.year))
+
+    year_list = sorted(list(year_set))
+
+    plt.title('Home Price Indices: ' + str(year_list[0])  + " - " + str(year_list[-1]))
+    plt.ylabel('Index')
+    plt.xlabel("Year")
+    for key in regionList:
+        # print(key)
+        data_list = data[key]
         values = build_plottable_array(year_list, data_list)
-        plt.plot(year_list, values, label=key)
+        # print(values)
+        plt.plot(year_list, values, label=key, marker='*', linestyle='-')
 
     plt.legend()
     plt.show()
 
 
 def plot_whiskers(data, regionList):
-    plt.title('Using masked arrays')
-    plt.ylabel('Indices')
-    plt.xlabel("Years")
+    plt.title('Home Price Index Comparison. Median is a line. Mean is a triangle.')
+    plt.ylabel('Index')
+    plt.xlabel("Region")
 
-    year_list = list()
-    for obj in data[regionList[0]]:
-        year_list.append(int(obj.year))
-
-    value_list = []
-    for key in regionList:
+    year_set = set()
+    value_list = list()
+    for key in data:
         data_list = data.get(key)
+        for item in data_list:
+            year_set.add(int(item.year))
+
+    year_list = sorted(list(year_set))
+
+    for key in regionList:
+        # print(key)
+        data_list = data[key]
         values = build_plottable_array(year_list, data_list)
         value_list.append(values)
     
-    plt.boxplot(value_list, labels=regionList)
+    plt.boxplot(value_list, labels=regionList, showmeans=True)
 
     plt.show()
 
 
 def main():
-    data = i.read_state_house_price_data("data/HPI_PO_state.txt")
-    data = i.annualize(data)
-    start_year = 1995
-    end_year = 2005
+    filename = input("enter file: ")
+    if "ZIP5" not in filename:
+        unsorted = i.read_state_house_price_data(filename)
+        unsorted = i.annualize(unsorted)
+    elif "ZIP5" in filename:
+        unsorted = i.read_zip_house_price_data(filename)
+    
+    start_year = int(input("enter start year: "))
+    end_year = int(input("enter start year: "))
     regionlist = list()
+    # regionlist = ["04083", "14625", "48210", "12202"]
     region = input("Enter next region for plots (<ENTER> to stop): ")
     while region != "":
         regionlist.append(region)
         region = input("Enter next region for plots (<ENTER> to stop): ")
 
-    filtered = filter_years(data, start_year, end_year)
-    print(filtered)
-    for region in regionlist:
-        i.print_range(i.index_range(filtered, region), region)
+    filtered = filter_years(unsorted, start_year, end_year)
+    # for region in regionlist:
+        # i.print_range(i.index_range(filtered, region), region)
 
     plotHPI(filtered, regionlist)
     print("close display window to continue")
