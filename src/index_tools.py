@@ -141,7 +141,7 @@ def print_range(data, region):
     printed output: Prints the low and high values (range) of the house price index for
     the given region. See the examples for the output format desired
     """
-    print("Region: " + str(region)+"\n")
+    print("\nRegion: " + str(region))
     if (type(data[0]) == QuarterHPI) == True:
         print("Low: year/quarter/index: " +
             str(data[0].year) + "/" + str(data[0].qtr) + "/" + str(data[0].idx), sep="")

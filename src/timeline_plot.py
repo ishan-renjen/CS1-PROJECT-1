@@ -16,27 +16,20 @@ import copy
 
 
 def build_plottable_array(xyears, regiondata):
-    """
-    iterate through xyears
-        iterate through regiondata - 
-            if it corresponds to a year in xyears 
-                add it to a list - array
-        if year not in array
-            mask
-    """
-    # array = ma.array(xyears)
     years = dict()
-    values = list()
     for i in regiondata:
         years[int(i.year)] = i.idx
 
-    array = ma.empty_like(values)
+    value_list = []
+    mask_list = []
     for year in xyears:
         if year in years:
-            array = ma.append(array, float(years[year]))
+            value_list.append(float(years[year]))
+            mask_list.append(False)
         if year not in years:
-            array = ma.append(array, None)
-    final_array = ma.masked_equal(array, None)
+            value_list.append(None)
+            mask_list.append(True)
+    final_array = ma.masked_array(value_list, mask_list)
     return final_array
 
 
@@ -69,27 +62,71 @@ def filter_years(data, year0, year1):
         lst_values = period_dict.get(key_lst)
         for mark in range(1, len(lst_values)):
             j=mark
-            while j>0 and key_lst[j-1].year > key_lst[j].year:
-                key_lst[j], key_lst[j-1] = key_lst[j-1], key_lst[j]
+            while j>0 and lst_values[j-1].year > lst_values[j].year:
+                lst_values[j], lst_values[j-1] = lst_values[j-1], lst_values[j]
                 j-=1
 
     return period_dict
 
 
 def plotHPI(data, regionList):
-    plt.plot([1, 2, 3, 4])
     plt.title('Using masked arrays')
-    plt.ylabel('some numbers')
+    plt.ylabel('Indices')
+    plt.xlabel("Years")
+
+    year_list = list()
+    for obj in data[regionList[0]]:
+        year_list.append(int(obj.year))
+
+    for key in regionList:
+        data_list = data.get(key)
+        values = build_plottable_array(year_list, data_list)
+        plt.plot(year_list, values, label=key)
+
+    plt.legend()
     plt.show()
 
 
 def plot_whiskers(data, regionList):
-    pass
+    plt.title('Using masked arrays')
+    plt.ylabel('Indices')
+    plt.xlabel("Years")
+
+    year_list = list()
+    for obj in data[regionList[0]]:
+        year_list.append(int(obj.year))
+
+    value_list = []
+    for key in regionList:
+        data_list = data.get(key)
+        values = build_plottable_array(year_list, data_list)
+        value_list.append(values)
+    
+    plt.boxplot(value_list, labels=regionList)
+
+    plt.show()
 
 
 def main():
-    data = i.read_zip_house_price_data("data/HPI_AT_ZIP5.txt")
-    yvalues = build_plottable_array([i for i in range(1999, 2012)], data["16034"])
-    print(yvalues)
+    data = i.read_state_house_price_data("data/HPI_PO_state.txt")
+    data = i.annualize(data)
+    start_year = 1995
+    end_year = 2005
+    regionlist = list()
+    region = input("Enter next region for plots (<ENTER> to stop): ")
+    while region != "":
+        regionlist.append(region)
+        region = input("Enter next region for plots (<ENTER> to stop): ")
+
+    filtered = filter_years(data, start_year, end_year)
+    print(filtered)
+    for region in regionlist:
+        i.print_range(i.index_range(filtered, region), region)
+
+    plotHPI(filtered, regionlist)
+    print("close display window to continue")
+    plot_whiskers(filtered, regionlist)
+    print("close display window to continue")
+
 
 main()
