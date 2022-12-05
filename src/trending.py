@@ -1,12 +1,29 @@
 """
-Ishan Renjen
-CS141-7
-Project 1 - Trending.py
+cs141-7
+Ishan Renjen, inr8842
+Project - trending.py
+TASK 2 - creates tuples with (region, compound annual growth rate) over the given time period using AnnualHPI objects
+12/5/2022
 """
+
 
 import index_tools as i
 
+
 def cagr(idxlist, periods):
+    """
+    purpose:
+        computes compound annual growth rate
+
+    parameters:
+        idxlist must be a list of 2 values with index of 0 being object.index at year0, index of 1 being object.index at year1
+        periods must be an int, range between year0 and year1
+
+    returns:
+        compound annual growth rate
+
+    prints nothing
+    """
     HPI0 = idxlist[0]
     HPI1 = idxlist[1]
 
@@ -14,15 +31,29 @@ def cagr(idxlist, periods):
 
     return CAGR
 
+
 def calculate_trends(data, year0, year1):
+    """
+    purpose:
+        creates a list of tuples (region, compound annual growth rate)
+
+    parameters:
+        data must be dictionary with key -> region, str | value -> list of AnnualHPI objects
+
+    returns list of tuples
+
+    prints nothing
+    """
     period_dict = dict()
     templist_years = list()
+    # pre=0
+    # post=0
     for key in data:
         data_list = data.get(key)
         for item in data_list:
             templist_years.append(int(item.year))
 
-        if year0 in templist_years and year1 in templist_years:
+        if int(year0) in templist_years and int(year1) in templist_years:
             for idx in range(len(templist_years)):
                 if templist_years[idx] == year0:
                     pre = idx
@@ -43,7 +74,7 @@ def calculate_trends(data, year0, year1):
     for key in period_dict:
         unsorted_list = period_dict.get(key)
         idxlist = [float(unsorted_list[0].idx), float(unsorted_list[-1].idx)]
-        rate = cagr(idxlist, year1-year0)
+        rate = cagr(idxlist, (int(year1)-int(year0)))
         tuple_list.append(tuple((key, rate)))
 
     for mark in range(1, len(tuple_list)):
@@ -58,16 +89,21 @@ def calculate_trends(data, year0, year1):
 
 
 def main():
-    filename = "data/HPI_PO_state.txt"
-    #input("enter filename: ")
-    start_year = 2003
-    #input("enter starting year: ")
-    end_year = 2016
-    #input("enter end year: ")
-    data = i.read_zip_house_price_data(filename)
+    """
+    main function
+    contains all the function calls and main formatting
+    returns nothing
+    prints all function returns and formatting details
+    """
+    filename = input("enter filename: ")
+    start_year = int(input("enter starting year: "))
+    end_year = int(input("enter end year: "))
+    if "ZIP5" not in filename:
+        data = i.read_state_house_price_data(filename)
+    elif "ZIP5" in filename:
+        data = i.read_zip_house_price_data(filename)
     annualized = i.annualize(data)
     sorted_data = calculate_trends(annualized, start_year, end_year)
-    print(sorted_data)
     i.print_ranking(sorted_data, str(start_year)+"-"+str(end_year)+" Compound Annual Growth Rate\n")
 
 
