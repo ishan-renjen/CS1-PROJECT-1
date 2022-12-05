@@ -144,7 +144,6 @@ def plot_whiskers(data, regionList):
         data_list = data[key]
         values = build_plottable_array(year_list, data_list)
         value_list.append(values)
-    
     plt.boxplot(value_list, labels=regionList, showmeans=True)
 
     plt.show()

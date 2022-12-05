@@ -29,7 +29,7 @@ def quarter_data(data, year, qtr):
         data_list = data.get(i)
 
         for x in data_list:
-            if x.year == year and x.qtr == qtr:
+            if int(x.year) == int(year) and int(x.qtr) == int(qtr):
                 if i in quarter_dict:
                     quarter_dict[i] += [x.idx]
                 else:
@@ -76,7 +76,7 @@ def annual_data(data, year):
         data_list = data.get(i)
 
         for x in data_list:
-            if x.year == year:
+            if int(x.year) == int(year):
                 if i in annual_dict:
                     annual_dict[i] += [x.idx]
                 else:
@@ -92,14 +92,8 @@ def annual_data(data, year):
             temp_tuple = tuple((state, float(idx)))
             tuple_list.append(temp_tuple)
         
-    for mark in range(1, len(tuple_list)):
-        j=mark
-        while j>0 and tuple_list[j-1][1] > tuple_list[j][1]:
-            tuple_list[j], tuple_list[j-1] = tuple_list[j-1], tuple_list[j]
-            j-=1
-
-    tuple_list = tuple_list[::-1]
-    return tuple_list
+    new_list = sorted(tuple_list, key=lambda x:x[1], reverse=True)
+    return new_list
 
 
 def main_period():
@@ -113,7 +107,6 @@ def main_period():
     if "data/" not in filename:
         filename = ("data/"+filename)
     year = input("Enter year of interest for house prices: ")
-
     if "ZIP5" not in filename:
         unsorted = i.read_state_house_price_data(filename)
     elif "ZIP5" in filename:

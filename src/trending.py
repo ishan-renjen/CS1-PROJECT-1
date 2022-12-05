@@ -104,13 +104,7 @@ def calculate_trends(data, year0, year1):
         rate = cagr(idxlist, (int(year1)-int(year0)))
         tuple_list.append(tuple((key, rate)))
 
-    for mark in range(1, len(tuple_list)):
-        j=mark
-        while j>0 and tuple_list[j-1][1] > tuple_list[j][1]:
-            tuple_list[j], tuple_list[j-1] = tuple_list[j-1], tuple_list[j]
-            j-=1
-
-    tuple_list = tuple_list[::-1]
+    tuple_list = sorted(tuple_list, key=lambda x:x[1], reverse=True)
 
     return tuple_list
 
