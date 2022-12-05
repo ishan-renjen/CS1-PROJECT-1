@@ -47,8 +47,6 @@ def read_state_house_price_data(filepath):
         file = f.readlines()
         if file[0][:5] == "state":
             file = file[1:]
-        # if file[0] == "state":
-        #     file.pop(0)
         for line in file:
             lst = line.strip().split("\t")
             state = lst[0]
@@ -119,7 +117,6 @@ def index_range(data, region):
 
     no printed output
     """
-    index = data.get(region)
     high = data[region][0]
     low = data[region][0]
     for hpi in data[region]:
@@ -200,32 +197,18 @@ def annualize(data):
     returns: A dictionary mapping regions to lists of AnnualHPI objects. 
 
     no printed output
-
-    step 1:
-        get quarterHPI dict value
-        step 2:
-            sort by increasing year
-        step 3:
-            split into sublists by 1 year increments
-        step 4:
-            combine indexes per year, create annualHPI objects
-            step 5:
-                add object to dict -> key, [object]
     """
-    #get individual value from key - STEP 1
     new_value = list()
     annual_dict = dict()
     for key in data:
         value = data.get(key)
         
-        #insertion sort - STEP 2
         for mark in range(1, len(value)):
             j=mark
 
             while j>0 and value[j-1].year > value[j].year:
                 value[j], value[j-1] = value[j-1], value[j]
                 j-=1
-        #end insertion sort
 
         while len(value) != 0:
             idx=0
@@ -249,8 +232,6 @@ def annualize(data):
 
             mean = sum_idx/len(new_value)
             annual = AnnualHPI(year, mean)
-
-        #     #end step 4, begin step 5
 
             if key in annual_dict:
                 annual_dict[key] += [annual]
@@ -284,7 +265,6 @@ def main_index():
     region_data = annualized_data.get(region)
     for item in region_data:
         print(item)
-
 
 
 if __name__ == "__main__":

@@ -8,11 +8,7 @@ timeline_plot.py
 
 import index_tools as i
 import numpy.ma as ma
-import matplotlib.ticker as mticker
 import matplotlib.pyplot as plt
-import datetime as dt
-import matplotlib.dates as mdates
-import copy
 
 
 def build_plottable_array(xyears, regiondata):
@@ -45,7 +41,6 @@ def filter_years(data, year0, year1):
             if int(item.year) >= int(year0) and int(item.year) <= int(year1):
                 templist.append(item)
         filtered_dict[key] = templist
-    # print(filtered_dict)
     return filtered_dict
 
 
@@ -62,10 +57,8 @@ def plotHPI(data, regionList):
     plt.ylabel('Index')
     plt.xlabel("Year")
     for key in regionList:
-        # print(key)
         data_list = data[key]
         values = build_plottable_array(year_list, data_list)
-        # print(values)
         plt.plot(year_list, values, label=key, marker='*', linestyle='-')
 
     plt.legend()
@@ -87,7 +80,6 @@ def plot_whiskers(data, regionList):
     year_list = sorted(list(year_set))
 
     for key in regionList:
-        # print(key)
         data_list = data[key]
         values = build_plottable_array(year_list, data_list)
         value_list.append(values)
@@ -108,15 +100,14 @@ def main():
     start_year = int(input("enter start year: "))
     end_year = int(input("enter start year: "))
     regionlist = list()
-    # regionlist = ["04083", "14625", "48210", "12202"]
     region = input("Enter next region for plots (<ENTER> to stop): ")
     while region != "":
         regionlist.append(region)
         region = input("Enter next region for plots (<ENTER> to stop): ")
 
     filtered = filter_years(unsorted, start_year, end_year)
-    # for region in regionlist:
-        # i.print_range(i.index_range(filtered, region), region)
+    for region in regionlist:
+        i.print_range(i.index_range(filtered, region), region)
 
     plotHPI(filtered, regionlist)
     print("close display window to continue")

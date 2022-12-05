@@ -78,14 +78,11 @@ def annual_data(data, year):
 
 
 def main_period():
-    filename = "data/HPI_PO_state.txt"
-    #input("Enter region-based house price index filename: ")
-    year = 1998
-    #input("Enter year of interest for house prices: ")
+    filename = input("Enter region-based house price index filename: ")
+    year = input("Enter year of interest for house prices: ")
 
     if "ZIP5" not in filename:
         unsorted = i.read_state_house_price_data(filename)
-        #need to annualize it
     elif "ZIP5" in filename:
         unsorted = i.read_zip_house_price_data(filename)
     annualized_data = i.annualize(unsorted)

@@ -58,12 +58,9 @@ def calculate_trends(data, year0, year1):
 
 
 def main():
-    filename = "data/HPI_PO_state.txt"
-    #input("enter filename: ")
-    start_year = 2003
-    #input("enter starting year: ")
-    end_year = 2016
-    #input("enter end year: ")
+    filename = input("enter filename: ")
+    start_year = input("enter starting year: ")
+    end_year = input("enter end year: ")
     data = i.read_zip_house_price_data(filename)
     annualized = i.annualize(data)
     sorted_data = calculate_trends(annualized, start_year, end_year)
