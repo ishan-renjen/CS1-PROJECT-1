@@ -7,10 +7,25 @@ TASK 2 - creates tuples with (region, compound annual growth rate) over the give
 """
 
 
+
 import index_tools as i
 
 
+
 def cagr(idxlist, periods):
+    """
+    purpose:
+        computes compound annual growth rate
+
+    parameters:
+        idxlist must be a list of 2 values with index of 0 being object.index at year0, index of 1 being object.index at year1
+        periods must be an int, range between year0 and year1
+
+    returns:
+        compound annual growth rate
+
+    prints nothing
+    """
     """
     purpose:
         computes compound annual growth rate
@@ -32,7 +47,19 @@ def cagr(idxlist, periods):
     return CAGR
 
 
+
 def calculate_trends(data, year0, year1):
+    """
+    purpose:
+        creates a list of tuples (region, compound annual growth rate)
+
+    parameters:
+        data must be dictionary with key -> region, str | value -> list of AnnualHPI objects
+
+    returns list of tuples
+
+    prints nothing
+    """
     """
     purpose:
         creates a list of tuples (region, compound annual growth rate)
@@ -96,6 +123,8 @@ def main():
     prints all function returns and formatting details
     """
     filename = input("enter filename: ")
+    if "data/" not in filename:
+        filename = ("data/"+filename)
     start_year = int(input("enter starting year: "))
     end_year = int(input("enter end year: "))
     if "ZIP5" not in filename:

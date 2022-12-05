@@ -66,7 +66,7 @@ def read_state_house_price_data(filepath):
             if index == ".":
                 print("data unavailable: \n" + str(lst) + "\n")
             else:
-                quarter = QuarterHPI(year, qtr, index)
+                quarter = QuarterHPI(int(year), int(qtr), float(index))
 
                 if state in state_dict:
                     state_dict[state].append(quarter)
@@ -107,7 +107,7 @@ def read_zip_house_price_data(filepath):
 
             if index != ".":
 
-                annual = AnnualHPI(year, index)
+                annual = AnnualHPI(int(year), float(index))
 
                 if zip in zip_dict:
                     zip_dict[zip] += [annual]
@@ -277,14 +277,14 @@ def main_index():
     prints all function returns and formatting details
     """
     filename = input("enter house price index file: ")
+    if "data/" not in filename:
+        filename = ("data/"+filename)
     region = input("enter state abbreviation or zip code: ")
 
     if len(region) == 2:
         unsorted = read_state_house_price_data(filename)
     else:
         unsorted = read_zip_house_price_data(filename)
-
-    print(unsorted)
 
     print("==================================================\n")
 
