@@ -1,8 +1,9 @@
 """
-Ishan Renjen
-Project 1
-CS141-7
-timeline_plot.py
+cs141-7
+Ishan Renjen, inr8842
+Project - timeline_plot.py
+TASK 3 - uses numpy, matplotlib, and index_tools.py to graph the data in a line graph and box plot, masking over missing data
+12/5/2022
 """
 
 
@@ -12,6 +13,19 @@ import matplotlib.pyplot as plt
 
 
 def build_plottable_array(xyears, regiondata):
+    """
+    purpose:
+        masks over the missing data points to create a plottable array
+
+    parameters:
+        xyears must be a list of years to check for
+        regiondata is a list of AnnualHPI objects
+
+    returns:
+        plottable numpy masked array
+
+    prints nothing
+    """
     years = dict()
     for i in regiondata:
         years[int(i.year)] = i.idx
@@ -30,6 +44,19 @@ def build_plottable_array(xyears, regiondata):
 
 
 def filter_years(data, year0, year1):
+    """
+    purpose:
+        removes years from given data that are not in the range year1-year0
+
+    parameters:
+        year1 and year0 must be real numbers
+        data -> dictionary with key -> region, str | value -> list of AnnualHPI objects
+
+    returns:
+        dictionary with extra years removed
+
+    prints nothing
+    """
     year0 = int(year0)
     year1 = int(year1)
     filtered_dict = dict()
@@ -44,7 +71,24 @@ def filter_years(data, year0, year1):
     return filtered_dict
 
 
-def plotHPI(data, regionList):
+def plot_HPI(data, regionList):
+    """
+    purpose:
+        plots the data from filter_years in a line graph
+
+    parameters:
+        regionlist -> list of regions from inputs in main, regions -> str
+        data -> dictionary with key -> region, str | value -> list of AnnualHPI objects within the entered year range
+
+    returns:
+        nothing
+
+    outputs:
+        line graph with x as years and y as index for the given regions
+
+    prints: 
+        nothing
+    """
     year_set = set()
     for key in data:
         data_list = data.get(key)
@@ -66,6 +110,23 @@ def plotHPI(data, regionList):
 
 
 def plot_whiskers(data, regionList):
+    """
+    purpose:
+        plots the data from filter_years in a box plot
+
+    parameters:
+        regionlist -> list of regions from inputs in main, regions -> str
+        data -> dictionary with key -> region, str | value -> list of AnnualHPI objects within the entered year range
+
+    returns:
+        nothing
+
+    outputs:
+        box plot with x as regions and y as index for the given regions, line is median and triangle is mean
+
+    prints: 
+        nothing
+    """
     plt.title('Home Price Index Comparison. Median is a line. Mean is a triangle.')
     plt.ylabel('Index')
     plt.xlabel("Region")
@@ -89,7 +150,13 @@ def plot_whiskers(data, regionList):
     plt.show()
 
 
-def main():
+def main_timeline():
+    """
+    main function
+    contains all the function calls and main formatting
+    returns nothing
+    prints all function returns and formatting details
+    """
     filename = input("enter file: ")
     if "ZIP5" not in filename:
         unsorted = i.read_state_house_price_data(filename)
@@ -109,10 +176,12 @@ def main():
     for region in regionlist:
         i.print_range(i.index_range(filtered, region), region)
 
-    plotHPI(filtered, regionlist)
+    plot_HPI(filtered, regionlist)
     print("close display window to continue")
     plot_whiskers(filtered, regionlist)
     print("close display window to continue")
 
 
-main()
+if __name__ == "__main__":
+    """MAIN GUARD"""
+    main_timeline()

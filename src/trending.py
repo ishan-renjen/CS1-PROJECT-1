@@ -1,12 +1,29 @@
 """
-Ishan Renjen
-CS141-7
-Project 1 - Trending.py
+cs141-7
+Ishan Renjen, inr8842
+Project - trending.py
+TASK 2 - creates tuples with (region, compound annual growth rate) over the given time period using AnnualHPI objects
+12/5/2022
 """
+
 
 import index_tools as i
 
+
 def cagr(idxlist, periods):
+    """
+    purpose:
+        computes compound annual growth rate
+
+    parameters:
+        idxlist must be a list of 2 values with index of 0 being object.index at year0, index of 1 being object.index at year1
+        periods must be an int, range between year0 and year1
+
+    returns:
+        compound annual growth rate
+
+    prints nothing
+    """
     HPI0 = idxlist[0]
     HPI1 = idxlist[1]
 
@@ -14,7 +31,19 @@ def cagr(idxlist, periods):
 
     return CAGR
 
+
 def calculate_trends(data, year0, year1):
+    """
+    purpose:
+        creates a list of tuples (region, compound annual growth rate)
+
+    parameters:
+        data must be dictionary with key -> region, str | value -> list of AnnualHPI objects
+
+    returns list of tuples
+
+    prints nothing
+    """
     period_dict = dict()
     templist_years = list()
     for key in data:
@@ -58,6 +87,12 @@ def calculate_trends(data, year0, year1):
 
 
 def main():
+    """
+    main function
+    contains all the function calls and main formatting
+    returns nothing
+    prints all function returns and formatting details
+    """
     filename = input("enter filename: ")
     start_year = input("enter starting year: ")
     end_year = input("enter end year: ")

@@ -1,8 +1,9 @@
 """
 cs141-7
-Ishan Renjen
+Ishan Renjen, inr8842
 Project - index_tools.py
-TASK 0 - pg.7-12
+TASK 0 - creates the functions and dataclasses that are used in later files
+12/5/2022
 """
 
 from dataclasses import dataclass
@@ -10,10 +11,12 @@ from dataclasses import dataclass
 @dataclass
 class QuarterHPI:
     """
-    P. 7
-    year: an integer representing the year of the index value.
-    qtr: an integer representing the quarter of the year.
-    index: a float representing the home price index
+    purpose: 
+        an object representing one quarter of one year of the dataset
+    attributes:
+        year: an integer representing the year of the index value.
+        qtr: an integer representing the quarter of the year.
+        index: a float representing the home price index
     """
     year: int
     qtr: int
@@ -23,9 +26,11 @@ class QuarterHPI:
 @dataclass
 class AnnualHPI:
     """
-    p. 7
-    year: an integer representing the year of the index value.
-    index: a float representing the home price index
+    purpose: 
+        an object representing one year of the dataset
+    attributes:
+        year: an integer representing the year of the index value.
+        index: a float representing the home price index
     """
     year: int
     idx: float
@@ -33,14 +38,18 @@ class AnnualHPI:
 
 def read_state_house_price_data(filepath):
     """
-    P. 7-8
-    return dictionary mapping state abbreviation to lists of QuarterHPI Objects
-        key = state abbreviation
-        value = list of quarterHPI Objects
+    purpose:
+        reads a state text file and turns it into a dictionary described below
 
-    Printed Output: warning message when data is unavailable. Message contains 
-    text "data unavailable", then prints the line content on the next line - see
-    example on pg. 8
+    returns:
+        dictionary mapping state abbreviation to lists of QuarterHPI Objects
+            key = state abbreviation -> str
+            value = list of quarterHPI Objects -> list -> [QuarterHPI, QuarterHPI, etc...]
+
+    prints:
+        warning message when data is unavailable
+            -Message contains text "data unavailable"
+            -prints the line content on the next line
     """
     state_dict = dict()
     with open(filepath, "r") as f:
@@ -69,19 +78,24 @@ def read_state_house_price_data(filepath):
 
 def read_zip_house_price_data(filepath):
     """
-    P. 8-9
-    returns: A dictionary mapping zip codes to lists of AnnualHPI objects. For every zip
-    code, there is exactly one list of AnnualHPI objects. 
+    purpose:
+        reads a zip5 text file and turns it into a dictionary described below
 
-    Printed Output: a count of lines read and lines uncounted due to unavailable or
-    incomplete values.
+    returns: 
+        A dictionary mapping zip codes to lists of AnnualHPI objects
+            1 zip code -> list of objects -> [AnnualHPI, AnnualHPI, ...] 
+
+    prints: 
+        a count of lines counted, lines uncounted 
+            -there are unavailable or incomplete values.
     """
     zip_dict = dict()
     counted = 0
     uncounted = 0
     with open(filepath, "r") as f:
         file = f.readlines()
-        file.pop(0)
+        if file[0][:4] == "Five":
+            file = file[1:]
         for line in file:
             lst = line.strip().split("\t")
             zip = lst[0]
@@ -108,12 +122,15 @@ def read_zip_house_price_data(filepath):
 
 def index_range(data, region):
     """
-    P. 9
-    parameters: A dictionary mapping regions to lists of *HPI4 objects and a region name. The
-    objects may be either QuarterHPI or AnnualHPI objects.
+    purpose:
+        creates a tuple of the low and high values of the inputted data range for the given region
 
-    returns: A tuple of the *HPI objects that are respectively the low and high index values
-    of the dataset.
+    parameters: 
+        dictionary -> key = region, str | value = list of HPI objects
+            -can be quarter or annualHPI
+
+    returns: 
+        A tuple of the HPI objects - (low value, high value)
 
     no printed output
     """
@@ -130,14 +147,18 @@ def index_range(data, region):
 
 def print_range(data, region):
     """
-    P. 9
-    parameters: A dictionary mapping regions to lists of *HPI objects and a region name
+    purpose:
+        prints the tuple from index_range in a formatted manner
 
-    returns NoneType
+    parameters: 
+        list/tuple of low and high values
 
-    printed output: Prints the low and high values (range) of the house price index for
-    the given region. See the examples for the output format desired
+    returns nothing
+
+    prints: 
+        Prints low and high values of the house price index for given region in the given format
     """
+
     print("\nRegion: " + str(region))
     if (type(data[0]) == QuarterHPI) == True:
         print("Low: year/quarter/index: " +
@@ -152,13 +173,16 @@ def print_range(data, region):
 
 def print_ranking(data, heading="Ranking"):
     """
-    P. 10
-    parameters: The data is a sorted list of objects, and the heading is a text message whose
-    default value is “Ranking”.
+    purpose:
+        prints given data in a rank - top 10 and bottom 10
 
-    returns NoneType
+    parameters: 
+        data is sorted, heading is str
 
-    prints table of processed data
+    returns nothing
+
+    prints:
+        table of processed data
     """
     length = len(data)
 
@@ -191,12 +215,16 @@ def print_ranking(data, heading="Ranking"):
 
 def annualize(data):
     """
-    P. 11
-    parameters: A dictionary mapping regions to lists of QuarterHPI objects.
+    purpose:
+        takes QuarterHPI objects per year and combines them into AnnualHPI objects - useful for state files
 
-    returns: A dictionary mapping regions to lists of AnnualHPI objects. 
+    parameters: 
+        dictionary -> key, str -> region | value, list of QuarterHPI objects per region
 
-    no printed output
+    returns: 
+        dictionary -> key, str -> region | value, list of Annual objects per region
+
+    prints nothing
     """
     new_value = list()
     annual_dict = dict()
@@ -242,6 +270,12 @@ def annualize(data):
 
 
 def main_index():
+    """
+    main function
+    contains all the function calls and main formatting
+    returns nothing
+    prints all function returns and formatting details
+    """
     filename = input("enter house price index file: ")
     region = input("enter state abbreviation or zip code: ")
 
@@ -268,4 +302,5 @@ def main_index():
 
 
 if __name__ == "__main__":
+    """MAIN GUARD"""
     main_index()

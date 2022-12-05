@@ -1,13 +1,26 @@
 """
-ishan renjen
-CS141 Project 1
-TASK 1 - period ranking.py
-START ON PG. 13
+cs141-7
+Ishan Renjen, inr8842
+Project - period_ranking.py
+TASK 1 - creates tuples for quarterHPI and AnnualHPI objects with (region, index)
+12/5/2022
 """
 
 import index_tools as i
 
 def quarter_data(data, year, qtr):
+    """
+    purpose:
+        to create a list of tuples containing (region, index) corresponding to the given year and quarter
+
+    parameters:
+        data must be dictionary of key -> region, str | value -> list of QuarterHPI objects, [QuarterHPI, ...]
+
+    returns:
+        list of tuples following (region, index) corresponding to the given year and quarter
+
+    prints nothing
+    """
     quarter_dict = dict()
     tuple_list = list()
     quarter_list = []
@@ -43,6 +56,18 @@ def quarter_data(data, year, qtr):
 
 
 def annual_data(data, year):
+    """
+    purpose:
+        to create a list of tuples containing (region, index) corresponding to the given year
+
+    parameters:
+        data must be dictionary of key -> region, str | value -> list of AnnualHPI objects, [AnnualHPI, ...]
+
+    returns:
+        list of tuples following (region, index) corresponding to the given year
+
+    prints nothing
+    """
     annual_dict = dict()
     tuple_list = list()
     annual_list = []
@@ -78,6 +103,12 @@ def annual_data(data, year):
 
 
 def main_period():
+    """
+    main function
+    contains all the function calls and main formatting
+    returns nothing
+    prints all function returns and formatting details
+    """
     filename = input("Enter region-based house price index filename: ")
     year = input("Enter year of interest for house prices: ")
 
@@ -90,4 +121,6 @@ def main_period():
     i.print_ranking(sorted_data, str(year)+" annual rankings:\n")
 
 
-main_period()
+if __name__ == "__main__":
+    """MAIN GUARD"""
+    main_period()
