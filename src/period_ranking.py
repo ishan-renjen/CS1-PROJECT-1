@@ -29,7 +29,7 @@ def quarter_data(data, year, qtr):
         data_list = data.get(i)
 
         for x in data_list:
-            if x.year == str(year) and x.qtr == str(qtr):
+            if x.year == year and x.qtr == qtr:
                 if i in quarter_dict:
                     quarter_dict[i] += [x.idx]
                 else:
@@ -76,7 +76,7 @@ def annual_data(data, year):
         data_list = data.get(i)
 
         for x in data_list:
-            if x.year == str(year):
+            if x.year == year:
                 if i in annual_dict:
                     annual_dict[i] += [x.idx]
                 else:
