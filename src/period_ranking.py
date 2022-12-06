@@ -107,9 +107,9 @@ def main_period():
     if "data/" not in filename:
         filename = ("data/"+filename)
     year = input("Enter year of interest for house prices: ")
-    if "ZIP5" not in filename:
+    if "state" in filename:
         unsorted = i.read_state_house_price_data(filename)
-    elif "ZIP5" in filename:
+    else:
         unsorted = i.read_zip_house_price_data(filename)
     annualized_data = i.annualize(unsorted)
     sorted_data = annual_data(annualized_data, year)

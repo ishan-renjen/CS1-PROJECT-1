@@ -279,13 +279,12 @@ def main_index():
     filename = input("enter house price index file: ")
     if "data/" not in filename:
         filename = ("data/"+filename)
-    region = input("enter state abbreviation or zip code: ")
 
-    if len(region) == 2:
+    if "state" in filename:
         unsorted = read_state_house_price_data(filename)
     else:
         unsorted = read_zip_house_price_data(filename)
-
+    region = input("enter state abbreviation or zip code: ")
     print("==================================================\n")
 
     data = index_range(unsorted, region)

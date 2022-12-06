@@ -157,10 +157,12 @@ def main_timeline():
     prints all function returns and formatting details
     """
     filename = input("enter file: ")
-    if "ZIP5" not in filename:
-        unsorted = i.read_state_house_price_data(filename)
-        unsorted = i.annualize(unsorted)
-    elif "ZIP5" in filename:
+    if "data/" not in filename:
+        filename = ("data/"+filename)
+    if "state" in filename:
+        unsorted_quarter = i.read_state_house_price_data(filename)
+        unsorted = i.annualize(unsorted_quarter)
+    else:
         unsorted = i.read_zip_house_price_data(filename)
     
     start_year = int(input("enter start year: "))
@@ -172,8 +174,10 @@ def main_timeline():
         region = input("Enter next region for plots (<ENTER> to stop): ")
 
     filtered = filter_years(unsorted, start_year, end_year)
-    for region in regionlist:
-        i.print_range(i.index_range(filtered, region), region)
+    
+    if "state" in filename:
+        for region in regionlist:
+            i.print_range(i.index_range(unsorted_quarter, region), region)
 
     plot_HPI(filtered, regionlist)
     print("close display window to continue")
