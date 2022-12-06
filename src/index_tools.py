@@ -8,6 +8,7 @@ TASK 0 - creates the functions and dataclasses that are used in later files
 
 from dataclasses import dataclass
 
+
 @dataclass
 class QuarterHPI:
     """
@@ -54,8 +55,10 @@ def read_state_house_price_data(filepath):
     state_dict = dict()
     with open(filepath, "r") as f:
         file = f.readlines()
+        
         if file[0][:5] == "state":
             file = file[1:]
+
         for line in file:
             lst = line.strip().split("\t")
             state = lst[0]
@@ -92,10 +95,13 @@ def read_zip_house_price_data(filepath):
     zip_dict = dict()
     counted = 0
     uncounted = 0
+
     with open(filepath, "r") as f:
         file = f.readlines()
+
         if file[0][:4] == "Five":
             file = file[1:]
+
         for line in file:
             lst = line.strip().split("\t")
             zip = lst[0]
@@ -115,7 +121,7 @@ def read_zip_house_price_data(filepath):
                 else:
                     zip_dict[zip] = [annual]
                     counted += 1
-                    
+
     print("counted: ", counted, " uncounted: ", uncounted)
     return zip_dict
 
@@ -136,12 +142,13 @@ def index_range(data, region):
     """
     high = data[region][0]
     low = data[region][0]
+
     for x in data[region]:
         if float(x.idx) > float(high.idx):
             high = x
         elif float(x.idx) < float(low.idx):
             low = x
-    
+
     return low, high
 
 
@@ -162,14 +169,15 @@ def print_range(data, region):
     print("\nRegion: " + str(region))
     if (type(data[0]) == QuarterHPI) == True:
         print("Low: year/quarter/index: " +
-            str(data[0].year) + "/" + str(data[0].qtr) + "/" + str(data[0].idx), sep="")
+              str(data[0].year) + "/" + str(data[0].qtr) + "/" + str(data[0].idx), sep="")
         print("High: year/quarter/index: " +
-            str(data[1].year) + "/" + str(data[1].qtr) + "/" + str(data[-1].idx))
+              str(data[1].year) + "/" + str(data[1].qtr) + "/" + str(data[-1].idx))
     else:
         print("Low: year/index: " +
-            str(data[0].year) + "/" + str(data[0].idx), sep="")
+              str(data[0].year) + "/" + str(data[0].idx), sep="")
         print("High: year/index: " +
-            str(data[1].year) + "/" + str(data[1].idx))
+              str(data[1].year) + "/" + str(data[1].idx))
+
 
 def print_ranking(data, heading="Ranking"):
     """
@@ -200,7 +208,7 @@ def print_ranking(data, heading="Ranking"):
           "10: " + str(data[9]), "\n",
 
           "\nThe Bottom 10\n",
-          
+
           str(length-9) + ": " + str(data[-10]), "\n",
           str(length-8) + ": " + str(data[-9]), "\n",
           str(length-7) + ": " + str(data[-8]), "\n",
@@ -228,18 +236,19 @@ def annualize(data):
     """
     new_value = list()
     annual_dict = dict()
+
     for key in data:
         value = data.get(key)
-        
-        for mark in range(1, len(value)):
-            j=mark
 
-            while j>0 and value[j-1].year > value[j].year:
+        for mark in range(1, len(value)):
+            j = mark
+
+            while j > 0 and value[j-1].year > value[j].year:
                 value[j], value[j-1] = value[j-1], value[j]
-                j-=1
+                j -= 1
 
         while len(value) != 0:
-            idx=0
+            idx = 0
             year = value[0].year
             new_value = []
             while idx < len(value):
@@ -249,9 +258,9 @@ def annualize(data):
                 else:
                     break
             value = value[idx:]
-        
+
             templist = []
-            sum_idx=0
+            sum_idx = 0
 
             for item in new_value:
                 templist.append(float(item.idx))
@@ -265,7 +274,7 @@ def annualize(data):
                 annual_dict[key] += [annual]
             else:
                 annual_dict[key] = [annual]
-    
+
     return annual_dict
 
 
@@ -284,20 +293,27 @@ def main_index():
         unsorted = read_state_house_price_data(filename)
     else:
         unsorted = read_zip_house_price_data(filename)
+
+    regionList = []
     region = input("enter state abbreviation or zip code: ")
-    print("==================================================\n")
 
-    data = index_range(unsorted, region)
-    print_range(data, region)
+    while region is not "":
+        regionList.append(region)
+        region = input("enter state abbreviation or zip code: ")
 
-    annualized_data = annualize(unsorted)
-    data = index_range(annualized_data, region)
-    print_range(data, region)
+    for region in regionList:
+        print("==================================================\n")
+        data = index_range(unsorted, region)
+        print_range(data, region)
 
-    print("annualized index values for " + str(region)+"\n")
-    region_data = annualized_data.get(region)
-    for item in region_data:
-        print(item)
+        annualized_data = annualize(unsorted)
+        data = index_range(annualized_data, region)
+        print_range(data, region)
+
+        print("annualized index values for " + str(region)+"\n")
+        region_data = annualized_data.get(region)
+        for item in region_data:
+            print(item)
 
 
 if __name__ == "__main__":

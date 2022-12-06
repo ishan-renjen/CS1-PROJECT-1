@@ -8,6 +8,7 @@ TASK 1 - creates tuples for quarterHPI and AnnualHPI objects with (region, index
 
 import index_tools as i
 
+
 def quarter_data(data, year, qtr):
     """
     purpose:
@@ -44,12 +45,12 @@ def quarter_data(data, year, qtr):
         for idx in index_lst:
             temp_tuple = tuple((state, float(idx)))
             tuple_list.append(temp_tuple)
-        
+
     for mark in range(1, len(tuple_list)):
-        j=mark
-        while j>0 and tuple_list[j-1][1] > tuple_list[j][1]:
+        j = mark
+        while j > 0 and tuple_list[j-1][1] > tuple_list[j][1]:
             tuple_list[j], tuple_list[j-1] = tuple_list[j-1], tuple_list[j]
-            j-=1
+            j -= 1
 
     tuple_list = tuple_list[::-1]
     return tuple_list
@@ -91,8 +92,8 @@ def annual_data(data, year):
         for idx in index_lst:
             temp_tuple = tuple((state, float(idx)))
             tuple_list.append(temp_tuple)
-        
-    new_list = sorted(tuple_list, key=lambda x:x[1], reverse=True)
+
+    new_list = sorted(tuple_list, key=lambda x: x[1], reverse=True)
     return new_list
 
 

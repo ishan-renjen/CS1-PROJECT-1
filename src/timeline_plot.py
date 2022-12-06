@@ -97,7 +97,8 @@ def plot_HPI(data, regionList):
 
     year_list = sorted(list(year_set))
 
-    plt.title('Home Price Indices: ' + str(year_list[0])  + " - " + str(year_list[-1]))
+    plt.title('Home Price Indices: ' +
+              str(year_list[0]) + " - " + str(year_list[-1]))
     plt.ylabel('Index')
     plt.xlabel("Year")
     for key in regionList:
@@ -131,19 +132,14 @@ def plot_whiskers(data, regionList):
     plt.ylabel('Index')
     plt.xlabel("Region")
 
-    year_set = set()
     value_list = list()
-    for key in data:
-        data_list = data.get(key)
-        for item in data_list:
-            year_set.add(int(item.year))
-
-    year_list = sorted(list(year_set))
 
     for key in regionList:
         data_list = data[key]
-        values = build_plottable_array(year_list, data_list)
-        value_list.append(values)
+        value_idx = []
+        for i in data_list:
+            value_idx.append(i.idx)
+        value_list.append(value_idx)
     plt.boxplot(value_list, labels=regionList, showmeans=True)
 
     plt.show()
@@ -164,7 +160,7 @@ def main_timeline():
         unsorted = i.annualize(unsorted_quarter)
     else:
         unsorted = i.read_zip_house_price_data(filename)
-    
+
     start_year = int(input("enter start year: "))
     end_year = int(input("enter start year: "))
     regionlist = list()
@@ -174,7 +170,7 @@ def main_timeline():
         region = input("Enter next region for plots (<ENTER> to stop): ")
 
     filtered = filter_years(unsorted, start_year, end_year)
-    
+
     if "state" in filename:
         for region in regionlist:
             i.print_range(i.index_range(unsorted_quarter, region), region)
